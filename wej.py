@@ -4,10 +4,10 @@ from Multiplet import Multiplet, line, F
 from LevMarJO import LevMar
 
 x = Multiplet()
-x.load_file("ErbLGSO_zdeczkapoprawka.in")
+x.load_file("./Test inputs/ErbLGSO_zdeczkapoprawka.in")
 
 print(x)
-"""with open('ErbLGSO_test.in') as f:
+"""with open(r"./Test inputs/ErbLGSO_test.in") as f:
      lines = [ line.strip('\n') for line in f ]
 np.set_printoptions(precision=3)
 names=['f','wavenumber','u2','u4','u6']
@@ -36,12 +36,10 @@ print (x)
 #for line in x.lines:
 #    print(F(line, x.n, x.tjpo, 1.0e-20, 1.0e-20, 1.0e-20))"""
 params = LevMar(x)
-print(params)
 emi = Multiplet()
-emi.load_rate("4s3_2.txt")
+emi.load_rate("./Test inputs/amd4i13_2.txt")
 emi.n = x.n
-print(emi)
-emi.calculaterates(params)
+emi.calculate_rates(params)
 """for line in x.lines:
    ft=F(line,x.n,x.tjpo,params[0],params[1],params[2])
    fexp=line.f

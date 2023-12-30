@@ -1,2 +1,5 @@
 *.pyc
 cache/*
+__pycache__/Multiplet.cpython-39.pyc
+__pycache__/LevMarJO.cpython-39.pyc
+*.pyc

@@ -75,12 +75,17 @@ def LevMar(dane):
         )
         if lam < 1e-26:
             break
+    print("______________________________________________")
+    print(f"Judd Ofelt intensity parameters are O2= {params[0]:.3} O4= {params[0]:.3} O6 ={params[0]:.3}")
+    print("______________________________________________")
+    print("Wavenumber wavelength fexp fteor (fexp-fteor)/fexp [%]")
     for line in dane.lines:
         tf = F(line, dane.n, dane.tjpo, params[0], params[1], params[2])
         print(
             f"{int(line.wn)} {1e7/line.wn:.1f} {line.f:.5} {tf:.5} { 100*(line.f-tf)/line.f:.2f}%"
         )
     dane.is_fitted = True
+    print("______________________________________________")
     return params
 
 
