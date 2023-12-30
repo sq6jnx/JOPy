@@ -75,15 +75,27 @@ def LevMar(dane):
         )
         if lam < 1e-26:
             break
+    error=np.sqrt(np.diag(inv(Hessd))*currChi2/(len(dane.lines)-3))
     print("______________________________________________")
-    print(f"Judd Ofelt intensity parameters are O2= {params[0]:.3} O4= {params[0]:.3} O6 ={params[0]:.3}")
+    print(
+        f"Judd Ofelt intensity parameters are: \n O2= {params[0]:.3} O4= {params[1]:.3} O6 ={params[2]:.3}"
+    )
+    print (f"Errors are dO2 {error[0]:.3} do4 {error[1]:.3} do6 {error[2]:.3}")
+    print (f"Relative errors are dO2/O2 {100*error[0]/params[0]:.3}% dO4/O4 {100*error[1]/params[1]:.3}% dO6/O6 {100*error[2]/params[2]:.3} %")
     print("______________________________________________")
     print("Wavenumber wavelength fexp fteor (fexp-fteor)/fexp [%]")
+    sum_of_squares=0
+    sum_of_strengths=0
     for line in dane.lines:
         tf = F(line, dane.n, dane.tjpo, params[0], params[1], params[2])
         print(
             f"{int(line.wn)} {1e7/line.wn:.1f} {line.f:.5} {tf:.5} { 100*(line.f-tf)/line.f:.2f}%"
         )
+        sum_of_squares+=(line.f-tf)**2
+        sum_of_strengths+=line.f
+    size=len(dane.lines)-3
+    print("______________________________________________")
+    print(f"RMS error is {np.sqrt(sum_of_squares/size):.3} RMS/avg f {100*np.sqrt(sum_of_squares/size)/sum_of_strengths:.1f} %")
     dane.is_fitted = True
     print("______________________________________________")
     return params

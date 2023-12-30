@@ -57,7 +57,19 @@ class Multiplet:
         self.n = np.longdouble(n)
         self.tjpo = np.longdouble(twojplusone)
         for i in range(1, len(lines)):
-            (f, wn, u2, u4, u6) = lines[i].split(" ")
+            pattern = re.compile(
+                "^(?P<f>[0-9.E+-]+) (?P<wn>[0-9.]+) (?P<u2>[0-9.]+) (?P<u4>[0-9.]+) (?P<u6>[0-9.]+) ?(?:#amd=(?P<amd>[0-9.]+))?",
+                re.I,
+            )
+            match = pattern.search(lines[i])
+            # (f, wn, u2, u4, u6) = lines[i].split(" ")
+            (f, wn, u2, u4, u6) = (
+                match.groupdict()["f"],
+                match.groupdict()["wn"],
+                match.groupdict()["u2"],
+                match.groupdict()["u4"],
+                match.groupdict()["u6"],
+            )
             self.add_line(line(f, wn, u2, u4, u6))
 
     def load_rate(self, fname):
@@ -67,15 +79,22 @@ class Multiplet:
         (twojplusone, n) = lines[0].split(" ")
         self.n = np.longdouble(n)
         self.tjpo = np.longdouble(twojplusone)
-        pattern=re.compile("^(?P<wn>[0-9.]+) (?P<u2>[0-9.]+) (?P<u4>[0-9.]+) (?P<u6>[0-9.]+) ?(?:#amd=(?P<amd>[0-9.]+))?")
+        pattern = re.compile(
+            "^(?P<wn>[0-9.]+) (?P<u2>[0-9.]+) (?P<u4>[0-9.]+) (?P<u6>[0-9.]+) ?(?:#amd=(?P<amd>[0-9.]+))?"
+        )
         for i in range(1, len(lines)):
-            #(wn, u2, u4, u6) = lines[i].split(" ")
-            match=pattern.search(lines[i])
-            #print (match.groupdict()["wn"])
-            (wn, u2, u4, u6)=(match.groupdict()["wn"],match.groupdict()["u2"],match.groupdict()["u4"], match.groupdict()["u6"])
+            # (wn, u2, u4, u6) = lines[i].split(" ")
+            match = pattern.search(lines[i])
+            # print (match.groupdict()["wn"])
+            (wn, u2, u4, u6) = (
+                match.groupdict()["wn"],
+                match.groupdict()["u2"],
+                match.groupdict()["u4"],
+                match.groupdict()["u6"],
+            )
             if match.groupdict()["amd"] is not None:
-                self.amd=self.n**3 * np.longdouble(match.groupdict()["amd"])
-                #print(f'Magnetic dipole contribution to transition rate is {self.amd}')
+                self.amd = self.n**3 * np.longdouble(match.groupdict()["amd"])
+                # print(f'Magnetic dipole contribution to transition rate is {self.amd}')
             self.add_emline(emline(wn, u2, u4, u6))
 
     def calculate_rates(self, parameters):
@@ -101,15 +120,14 @@ class Multiplet:
             )
         print("________________________________________")
         print(
-            f"Total rate         {sumrate:.5} s^-1 {1e6/sumrate:.2f} us  or {1e3/sumrate:.2f} ms"
+            f"Total rate         {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
         )
         if self.amd is not None:
-            sumrate+=self.amd
+            sumrate += self.amd
             print(
-                f"Total rate with MD {sumrate:.5} s^-1 {1e6/sumrate:.2f} us  or {1e3/sumrate:.2f} ms"
+                f"Total rate with MD {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
             )
-            print(f'Magnetic dipole contribution to transition rate is {self.amd}')
-        
+            print(f"Magnetic dipole contribution to transition rate is {self.amd}")
 
     def __init__(self):
         self.lines = []
