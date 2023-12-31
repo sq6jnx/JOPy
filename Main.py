@@ -1,11 +1,13 @@
 import PySimpleGUI as sg
+import os
+from datetime import datetime
 
 layout = [
-    [sg.Output(size=(120, 20), key="ML")],
-    [sg.Button("Ładuj jak zmywarkę", key="LOAD"), sg.Button("Rate", key="RATE")],
+    [sg.Multiline(size=(120, 20), key="ML", reroute_stdout=True)],
+    [sg.Button("Load absorption data", key="LOAD"), sg.Button("Rate", key="RATE")],
 ]
 
-window = sg.Window("Window Title", layout, finalize=True)
+window = sg.Window("Judd Ofelt Solver in Python", layout, finalize=True)
 from Multiplet import Multiplet, line, F
 from LevMarJO import LevMar
 
@@ -16,11 +18,16 @@ while True:
     if event == "LOAD":
         x = Multiplet()
         filename = sg.popup_get_file("Will not see this message", no_window=True)
-        print(f"Loading file {filename}")
+        window.bring_to_front()
         x.load_file(filename)
         print(x)
         params = LevMar(x)
-        window.bring_to_front()
+        now=datetime.now()
+        timestring=f"{now.year}{now.month}{now.day}{now.hour}{now.minute}{now.second}"
+        dirpath=os.path.dirname(filename)
+        (file,ext)=os.path.splitext(os.path.basename(filename))
+        with open(os.path.join(dirpath,"abso"+timestring+file+".log"), "wt", encoding='UTF-8') as f:
+            f.write(window['ML'].get())
     if event == "RATE":
         if x.is_fitted:
             filenames = sg.popup_get_file(
@@ -28,10 +35,15 @@ while True:
             )
             window.bring_to_front()
             for fname in filenames:
-                print("Loading ", fname)
                 emi = Multiplet()
                 emi.load_rate(fname)
-                emi.calculaterates(params)
+                emi.calculate_rates(params)
+            now=datetime.now()
+            timestring=f"{now.year}{now.month}{now.day}{now.hour}{now.minute}{now.second}"
+            dirpath=os.path.dirname(filename)
+            (file,ext)=os.path.splitext(os.path.basename(filename))
+            with open(os.path.join(dirpath,"emi"+timestring+file+".log"), "wt", encoding='UTF-8') as f:
+                f.write(window['ML'].get())
     if event == sg.WIN_CLOSED or event == "Exit":
         break
 

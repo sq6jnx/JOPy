@@ -73,6 +73,7 @@ class Multiplet:
             self.add_line(line(f, wn, u2, u4, u6))
 
     def load_rate(self, fname):
+        print("________________________________________")
         print(f"Loading emission data from {fname}")
         with open(fname) as f:
             lines = [line.strip("\n") for line in f]
@@ -96,6 +97,7 @@ class Multiplet:
                 self.amd = self.n**3 * np.longdouble(match.groupdict()["amd"])
                 # print(f'Magnetic dipole contribution to transition rate is {self.amd}')
             self.add_emline(emline(wn, u2, u4, u6))
+            print (self)
 
     def calculate_rates(self, parameters):
         rates = []
@@ -122,7 +124,7 @@ class Multiplet:
         print(
             f"Total rate         {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
         )
-        if self.amd is not None:
+        if hasattr(self,"amd"):
             sumrate += self.amd
             print(
                 f"Total rate with MD {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
