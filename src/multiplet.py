@@ -1,5 +1,7 @@
-import numpy as np
 import re
+import typing
+
+import numpy as np
 
 pi = 3.141592653589793238462643383279502884
 m = 9.1093897e-28
@@ -40,13 +42,18 @@ def F(line, n, tjpo, o2, o4, o6):
 
 
 class Multiplet:
-    def add_line(self, line):
+    def __init__(self):
+        self.lines = []
+        self.n = 1.234
+        self.tjpo = 2
+
+    def add_line(self, line: EmLine) -> None:
         self.lines.append(line)
 
-    def add_emline(self, emline):
+    def add_emline(self, emline: EmLine) -> None:
         self.lines.append(emline)
 
-    def load_file(self, fname):
+    def load_file(self, fname: str) -> None:
         print(f"Loading {fname}")
         with open(fname) as f:
             lines = [line.strip("\n") for line in f]
@@ -69,7 +76,7 @@ class Multiplet:
             )
             self.add_line(AbsLine(f, wn, u2, u4, u6))
 
-    def load_rate(self, fname):
+    def load_rate(self, fname: str) -> None:
         print("________________________________________")
         print(f"Loading emission data from {fname}")
         with open(fname) as f:
@@ -96,7 +103,7 @@ class Multiplet:
             self.add_emline(EmLine(wn, u2, u4, u6))
             print(self)
 
-    def calculate_rates(self, parameters):
+    def calculate_rates(self, parameters: np.ndarray) -> None:
         rates = []
         sumrate = 0
         for line in self.lines:
@@ -128,10 +135,6 @@ class Multiplet:
             )
             print(f"Magnetic dipole contribution to transition rate is {self.amd}")
 
-    def __init__(self):
-        self.lines = []
-        self.n = 1.234
-        self.tjpo = 2
 
     def __repr__(self):
         strlines = ""
