@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.linalg import inv, cond
 import matplotlib.pyplot as plt
-from Multiplet import F, Line
+from Multiplet import F, AbsLine
 
 # from math import *
 

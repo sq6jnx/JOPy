@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from Multiplet import Multiplet, Line, F
+from Multiplet import Multiplet, AbsLine, F
 from LevMarJO import LevMar
 
 x = Multiplet()

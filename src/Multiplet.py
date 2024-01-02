@@ -8,7 +8,7 @@ h = 6.6260755e-27
 qe = 4.8032068e-10
 
 
-class Line:
+class AbsLine:
     def __init__(self, f, wn, u2, u4, u6):
         self.f = np.longdouble(f)
         self.wn = np.longdouble(wn)
@@ -22,7 +22,7 @@ class Line:
         )
 
 
-class emline:
+class EmLine:
     def __init__(self, wn, u2, u4, u6):
         self.wn = np.longdouble(wn)
         self.u2 = np.longdouble(u2)
@@ -70,7 +70,7 @@ class Multiplet:
                 match.groupdict()["u4"],
                 match.groupdict()["u6"],
             )
-            self.add_line(Line(f, wn, u2, u4, u6))
+            self.add_line(AbsLine(f, wn, u2, u4, u6))
 
     def load_rate(self, fname):
         print("________________________________________")
@@ -96,7 +96,7 @@ class Multiplet:
             if match.groupdict()["amd"] is not None:
                 self.amd = self.n**3 * np.longdouble(match.groupdict()["amd"])
                 # print(f'Magnetic dipole contribution to transition rate is {self.amd}')
-            self.add_emline(emline(wn, u2, u4, u6))
+            self.add_emline(EmLine(wn, u2, u4, u6))
             print (self)
 
     def calculate_rates(self, parameters):
