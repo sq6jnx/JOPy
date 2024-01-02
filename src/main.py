@@ -1,15 +1,18 @@
-import PySimpleGUI as sg
-import os
 from datetime import datetime
+import os
+
+import PySimpleGUI as sg
+
+from LevMarJO import LevMar
+from Multiplet import Multiplet
 
 layout = [
-    [sg.Multiline(size=(120, 20), key="ML", reroute_stdout=True)],
+    [multiline := sg.Multiline(size=(120, 20), key="ML", reroute_stdout=True)],  # FIXME: bez reroute_...
     [sg.Button("Load absorption data", key="LOAD"), sg.Button("Rate", key="RATE")],
 ]
 
 window = sg.Window("Judd Ofelt Solver in Python", layout, finalize=True)
-from Multiplet import Multiplet, line, F
-from LevMarJO import LevMar
+
 
 x = Multiplet()
 while True:
@@ -20,7 +23,7 @@ while True:
         filename = sg.popup_get_file("Will not see this message", no_window=True)
         window.bring_to_front()
         x.load_file(filename)
-        print(x)
+        multiline.print(x)
         params = LevMar(x)
         now = datetime.now()
         timestring = f"{now.year}{now.month}{now.day}{now.hour}{now.minute}{now.second}"
