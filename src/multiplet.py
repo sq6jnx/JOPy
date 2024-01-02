@@ -46,6 +46,7 @@ class Multiplet:
         self.lines = []
         self.n = 1.234
         self.tjpo = 2
+        self.amd = None
 
     def add_line(self, line: EmLine) -> None:
         self.lines.append(line)
@@ -128,7 +129,7 @@ class Multiplet:
         print(
             f"Total rate         {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
         )
-        if hasattr(self, "amd"):
+        if self.amd is not None:
             sumrate += self.amd
             print(
                 f"Total rate with MD {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
