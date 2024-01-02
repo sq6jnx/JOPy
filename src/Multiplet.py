@@ -8,20 +8,6 @@ h = 6.6260755e-27
 qe = 4.8032068e-10
 
 
-class AbsLine:
-    def __init__(self, f, wn, u2, u4, u6):
-        self.f = np.longdouble(f)
-        self.wn = np.longdouble(wn)
-        self.u2 = np.longdouble(u2)
-        self.u4 = np.longdouble(u4)
-        self.u6 = np.longdouble(u6)
-
-    def __str__(self):
-        return (
-            f"{self.f:.5} {int(self.wn): 5d} {self.u2:.4} {self.u4:.4} {self.u6:.4}\n"
-        )
-
-
 class EmLine:
     def __init__(self, wn, u2, u4, u6):
         self.wn = np.longdouble(wn)
@@ -31,6 +17,17 @@ class EmLine:
 
     def __str__(self):
         return f"{int(self.wn): 5d} {self.u2:.4} {self.u4:.4} {self.u6:.4}\n"
+
+
+class AbsLine(EmLine):
+    def __init__(self, f, wn, u2, u4, u6):
+        self.f = np.longdouble(f)
+        super().__init__(wn, u2, u4, u6)
+
+    def __str__(self):
+        return (
+            f"{self.f:.5} {int(self.wn): 5d} {self.u2:.4} {self.u4:.4} {self.u6:.4}\n"
+        )
 
 
 def F(line, n, tjpo, o2, o4, o6):
@@ -97,7 +94,7 @@ class Multiplet:
                 self.amd = self.n**3 * np.longdouble(match.groupdict()["amd"])
                 # print(f'Magnetic dipole contribution to transition rate is {self.amd}')
             self.add_emline(EmLine(wn, u2, u4, u6))
-            print (self)
+            print(self)
 
     def calculate_rates(self, parameters):
         rates = []
@@ -124,7 +121,7 @@ class Multiplet:
         print(
             f"Total rate         {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
         )
-        if hasattr(self,"amd"):
+        if hasattr(self, "amd"):
             sumrate += self.amd
             print(
                 f"Total rate with MD {sumrate:.1f} s^-1 {1e6/sumrate:.0f} us  or {1e3/sumrate:.2f} ms"
