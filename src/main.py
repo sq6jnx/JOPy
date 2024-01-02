@@ -4,7 +4,7 @@ import os
 import PySimpleGUI as sg
 
 from LevMarJO import LevMar
-from Multiplet import Multiplet
+from multiplet import Multiplet
 
 layout = [
     [multiline := sg.Multiline(size=(120, 20), key="ML", reroute_stdout=True)],  # FIXME: bez reroute_...
