@@ -1,3 +1,4 @@
+import pathlib
 import re
 import typing
 
@@ -83,6 +84,11 @@ class Multiplet:
     def load_rate(self, fname: str) -> None:
         print("________________________________________")
         print(f"Loading emission data from {fname}")
+        ## .. gdyby tu przekazać pathlib.Path()...
+        #with fname.open() as f: ...
+        ## albo
+        #lines = fname.open().readlines()
+
         with open(fname) as f:
             lines = [line.strip("\n") for line in f]
         (twojplusone, n) = lines[0].split(" ")
