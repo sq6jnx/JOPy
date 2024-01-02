@@ -56,24 +56,27 @@ class Multiplet:
 
     def load_file(self, fname: str) -> None:
         print(f"Loading {fname}")
+        ## hint: https://docs.python.org/3/library/fileinput.html#fileinput.input
         with open(fname) as f:
-            lines = [line.strip("\n") for line in f]
-        (twojplusone, n) = lines[0].split(" ")
+            # lines = [line.strip("\n") for line in f]
+            # lines = [line.strip() for line in f]
+            lines = map(lambda s: s.strip(), f)
+        (two_j_plus_one, n) = lines.__next__().split()
         self.n = np.longdouble(n)
-        self.tjpo = np.longdouble(twojplusone)
-        for i in range(1, len(lines)):
+        self.tjpo = np.longdouble(two_j_plus_one)
+        for line in lines:
             pattern = re.compile(
                 "^(?P<f>[0-9.E+-]+) (?P<wn>[0-9.]+) (?P<u2>[0-9.]+) (?P<u4>[0-9.]+) (?P<u6>[0-9.]+) ?(?:#amd=(?P<amd>[0-9.]+))?",
                 re.I,
             )
-            match = pattern.search(lines[i])
+            match = pattern.search(line).groupdict()
             # (f, wn, u2, u4, u6) = lines[i].split(" ")
             (f, wn, u2, u4, u6) = (
-                match.groupdict()["f"],
-                match.groupdict()["wn"],
-                match.groupdict()["u2"],
-                match.groupdict()["u4"],
-                match.groupdict()["u6"],
+                match["f"],
+                match["wn"],
+                match["u2"],
+                match["u4"],
+                match["u6"],
             )
             self.add_line(AbsLine(f, wn, u2, u4, u6))
 
