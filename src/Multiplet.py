@@ -8,7 +8,7 @@ h = 6.6260755e-27
 qe = 4.8032068e-10
 
 
-class line:
+class Line:
     def __init__(self, f, wn, u2, u4, u6):
         self.f = np.longdouble(f)
         self.wn = np.longdouble(wn)
@@ -16,7 +16,7 @@ class line:
         self.u4 = np.longdouble(u4)
         self.u6 = np.longdouble(u6)
 
-    def __repr__(self):
+    def __str__(self):
         return (
             f"{self.f:.5} {int(self.wn): 5d} {self.u2:.4} {self.u4:.4} {self.u6:.4}\n"
         )
@@ -29,7 +29,7 @@ class emline:
         self.u4 = np.longdouble(u4)
         self.u6 = np.longdouble(u6)
 
-    def __repr__(self):
+    def __str__(self):
         return f"{int(self.wn): 5d} {self.u2:.4} {self.u4:.4} {self.u6:.4}\n"
 
 
@@ -70,7 +70,7 @@ class Multiplet:
                 match.groupdict()["u4"],
                 match.groupdict()["u6"],
             )
-            self.add_line(line(f, wn, u2, u4, u6))
+            self.add_line(Line(f, wn, u2, u4, u6))
 
     def load_rate(self, fname):
         print("________________________________________")
